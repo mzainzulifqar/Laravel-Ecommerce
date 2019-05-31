@@ -36,4 +36,8 @@ class LoginController extends Controller
     {
         $this->middleware(array('guest:web','guest:admin'))->except('logout');
     }
+
+    public function redirectTo(){
+        return str_replace(url('/'),'',Session()->get('previousUrl','/'));
+    }
 }

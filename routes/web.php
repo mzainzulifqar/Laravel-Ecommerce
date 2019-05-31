@@ -1,5 +1,7 @@
 <?php
 
+use App\Category;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,12 +12,16 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/empty/cart',function(){
 
-	Cart::instance('saveforlater')->destroy();
+
+Route::get('/testing',function()
+ {  
+ 	 $category  = Category::whereHas('greatgrandfather',function($query)
+        {
+                $query->where('parent_id',0);
+        })->get();
+	return view('frontend.algolia',compact('category'));
 });
-
-Route::get('/testing','CartController@testing');
 
 
 Route::group(['as' => 'main.'],function(){
@@ -32,13 +38,16 @@ Route::group(['as' => 'main.'],function(){
 	Route::post('/cart/remove/save','CartController@removefromsave')->name('cart.removefromsave');
 	Route::post('/cart/updateqty','CartController@updateqty')->name('cart.updateqty');
 	//Checkout Routes
-	Route::get('/checkout','CheckoutController@index')->name('checkout');
+	Route::get('/checkout','CheckoutController@index')->name('checkout')->middleware('auth');
+	Route::get('/guestcheckout','CheckoutController@index')->name('guestcheckout');
 	Route::post('/checkout/store','CheckoutController@store')->name('checkout.store');
 	//Coupon Routes
 	Route::post('/coupon','CheckoutController@add_coupon')->name('add_coupon');
 	Route::delete('/coupon','CheckoutController@remove_coupon')->name('remove_coupon');
 	//category Routes
 	Route::get('/shop','MainController@fetchwithcategory')->name('shop');
+	// Search Routes
+	Route::get('/search','MainController@search')->name('search');
 });
 
 
@@ -60,6 +69,12 @@ Route::group(['as' => 'admin.','middleware' => ['auth:admin'],'prefix' => 'admin
 	
 	Route::get('/dashboard','AdminController@index')->name('dashboard');
 	Route::post('/logout','Auth\AdminLoginController@logout')->name('logout');
+
+	//orders routes
+	Route::get('/orders','OrderController@index')->name('order.list');
+	Route::get('/orders/details/{order}','OrderController@create')->name('order.details');
+	Route::delete('/orders/delete/{order}','OrderController@destroy')->name('order.destroy');
+	Route::get('/orders/status/{order}/{value}','OrderController@update')->name('order.update');
 
 
 		// softdelete routes for category

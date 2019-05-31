@@ -1,4 +1,22 @@
 @extends('frontend.layouts.app')
+@section('css')
+<style>
+    .ais-Stats-text{
+  font-size: 1.8rem !important;
+}
+.ais-ClearRefinements-button
+{
+    font-size: 1.8rem !important;
+}
+[class^=ais-] {
+    font-size: 2rem !important;
+    box-sizing: border-box;
+}
+</style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/reset-min.css" integrity="sha256-t2ATOGCtAIZNnzER679jwcFcKYfLlw01gli6F6oszk8=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css" integrity="sha256-HB49n/BZjuqiCtQQf49OdZn63XuKFaxcIHWf0HNKte8=" crossorigin="anonymous">
+
+@endsection()
 @section('section')
 
 
@@ -29,14 +47,14 @@
                         <div class="widget">
                             <h6 class="subtitle">Search</h6>
                             
-                            <form>
-                                <input type="text" id="lastname" class="form-control input-sm" placeholder="Search">
-                            </form>
+                           <div id="searchbox"></div>
+
                         </div><!-- end widget -->
+                        <div id="clear-refinements"></div>
                         <div class="widget">
                             <h6 class="subtitle">Categories</h6>
-                            
-                            <ul class="list list-unstyled">
+                            <div id="refinement-list"></div>
+                          {{--   <ul class="list list-unstyled">
                                 <li>
                                     <div class="checkbox-input checkbox-default">
                                         <input id="mens-category" class="styled" type="checkbox" checked>
@@ -109,12 +127,13 @@
                                         </label>
                                     </div>
                                 </li>
-                            </ul>
+                            </ul> --}}
                         </div><!-- end widget -->
                         <div class="widget">
                             <h6 class="subtitle">Prices</h6>
+                            <div id="range-slider"></div>
                             
-                            <form method="post" class="price-range" data-start-min="250" data-start-max="650" data-min="0" data-max="1000" data-step="1">
+                           {{--  <form method="post" class="price-range" data-start-min="250" data-start-max="650" data-min="0" data-max="1000" data-step="1">
                                 <div class="ui-range-values">
                                     <div class="ui-range-value-min">
                                         $<span></span>
@@ -127,11 +146,11 @@
                                 </div>
                                 <div class="ui-range-slider"></div>
                                 <button type="submit" class="btn btn-default btn-block btn-md">Filter</button>
-                            </form>
+                            </form> --}}
                         </div><!-- end widget -->
                         <div class="widget">
                             
-                            <h6 class="subtitle">Brands</h6>
+                            {{-- <h6 class="subtitle">Brands</h6>
                             
                             <ul class="list list-unstyled">
                                 <li>
@@ -166,10 +185,10 @@
                                         </label>
                                     </div>
                                 </li>
-                            </ul>
+                            </ul> --}}
                         </div><!-- end widget -->
                         <div class="widget">
-                            <h6 class="subtitle">Colors</h6>
+                           {{--  <h6 class="subtitle">Colors</h6>
                             
                             <ul class="list list-unstyled">
                                 <li>
@@ -202,7 +221,7 @@
                                         </label>
                                     </div>
                                 </li>
-                            </ul>
+                            </ul> --}}
                         </div><!-- end widget -->
                         <div class="widget">
                             <h6 class="subtitle">My Cart</h6>
@@ -279,15 +298,15 @@
                                 <h2 class="title">Shop</h2>
                             </div><!-- end col -->
                         </div><!-- end row -->
-                        
+                        <div id="stats" style="font-size:24px !important;"></div>
                         <hr class="spacer-5"><hr class="spacer-20 no-border">
-                        
+                        <div id="hits"></div>
                         <div class="row column-3">
 
-                            @foreach($product as $p)
-                            <div >
-                            <div class="col-sm-4 col-md-4">
-                                <div class="thumbnail store style2" {{-- style="min-height: 470px;margin-bottom: 20px;" --}}>
+                            {{-- @foreach($product as $p) --}}
+                            {{-- <div> --}}
+                            {{-- <div class="col-sm-4 col-md-4">
+                                <div class="thumbnail store style2">
                                     <div class="header">
                                         <div class="badges">
                                             @if(!empty($p->discount))
@@ -319,34 +338,29 @@
                                             <small class="amount off">{{$p->presentPrice($p->price)}}</small>
                                             <span class="amount text-primary">{{$p->presentPrice($p->discount_price)}}</span>
                                         </div>
-                                        <a href="javascript:void(0);"><i class="fa fa-cart-plus mr-5"></i>Add to cart</a>
-                                    </div><!-- end caption -->
-                                </div><!-- end thumbnail -->
-                            </div><!-- end col -->
-                        </div><!--end of width div-->
+                                        <a href="javascript:void(0);"><i class="fa fa-cart-plus mr-5"></i>Add to cart</a> --}}
+                                    {{-- </div>end caption --}}
+                                {{-- </div>end thumbnail --}}
+                            {{-- </divend col --}}
+                        {{-- </div>end of width div --}}
 
-                            @endforeach()
+                            {{-- @endforeach() --}}
                             
                             
                         <hr class="spacer-10 no-border">
                         
                         <div class="row">
+
+
                             <div class="col-sm-12 text-center">
                                 <nav>
-                                    <ul class="pagination">
-                                        <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-                                        <li><a href="#">1</a></li>
-                                        <li><a href="#">2</a></li>
-                                        <li class="active"><a href="#">3</a></li>
-                                        <li><a href="#">4</a></li>
-                                        <li><a href="#">5</a></li>
-                                        <li><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
-                                    </ul>
+                                   
                                 </nav>
                                    
                                 
                             </div><!-- end col -->
                         </div><!-- end row -->
+                            <div id="pagination"></div>
                     </div><!-- end col -->   
                 </div><!-- end row -->
                  
@@ -356,4 +370,10 @@
         </section>
         <!-- end section -->
         
+       @endsection()
+       @section('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/algoliasearch@3.32.1/dist/algoliasearchLite.js" integrity="sha256-pMaJf0I78weeXGkRMBDO6jSulxC/q3sb0aPdtV2N8n0=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@3.2.0" integrity="sha256-/8usMtTwZ01jujD7KAZctG0UMk2S2NDNirGFVBbBZCM=" crossorigin="anonymous"></script>
+    
+             <script src="{{asset('public/js/algolia-instantsearch.js')}}"></script>
        @endsection()

@@ -19,99 +19,7 @@
         <section class="section white-backgorund">
             <div class="container">
                 <div class="row">
-                    <!-- start sidebar -->
-                    <div class="col-sm-3">
-                             @if(Auth::user())
-                        <div class="widget">
-                            <h6 class="subtitle">Account Navigation</h6>
-                            
-                            <ul class="list list-unstyled">
-                                <li>
-                                    <a href="my-account.html">My Account</a>
-                                </li>
-                                <li class="active">
-                                    <a href="cart.html">My Cart <span class="text-primary">(3)</span></a>
-                                </li>
-                                <li>
-                                    <a href="order-list.html">My Order</a>
-                                </li>
-                                <li>
-                                    <a href="wishlist.html">Wishlist <span class="text-primary">(5)</span></a>
-                                </li>
-                                <li>
-                                    <a href="user-information.html">Settings</a>
-                                </li>
-                            </ul>
-                        </div><!-- end widget -->
-                        @else
-                         <div class="widget">
-                            <h6 class="subtitle">Navigation</h6>
-                            
-                            <ul class="list list-unstyled">
-                                <li>
-                                    <a href="{{url('/')}}">Home</a>
-                                </li>
-                                
-                            </ul>
-                        </div><!-- end widget -->
-                        @endif
-                        
-                        <div class="widget">
-                            <h6 class="subtitle">New Collection</h6>
-                            <figure>
-                                <a href="javascript:void(0);">
-                                    <img src="img/products/men_06.jpg" alt="collection">
-                                </a>
-                            </figure>
-                        </div><!-- end widget -->
-                        
-                        <div class="widget">
-                            <h6 class="subtitle">Featured</h6>
-                            
-                            <ul class="items">
-                                <li> 
-                                    <a href="shop-single-product-v1.html" class="product-image">
-                                        <img src="img/products/men_01.jpg" alt="Sample Product ">
-                                    </a>
-                                    <div class="product-details">
-                                        <p class="product-name"> 
-                                            <a href="shop-single-product-v1.html">Product name</a> 
-                                        </p>
-                                        <span class="price text-primary">$19.99</span>
-                                        <div class="rate text-warning">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
-                                    </div>
-                                </li><!-- end item -->
-                                <li> 
-                                    <a href="shop-single-product-v1.html" class="product-image">
-                                        <img src="img/products/women_02.jpg" alt="Sample Product ">
-                                    </a>
-                                    <div class="product-details">
-                                        <p class="product-name"> 
-                                            <a href="shop-single-product-v1.html">Product name</a> 
-                                        </p>
-                                        <span class="price text-primary">$19.99</span>
-                                        <div class="rate text-warning">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
-                                    </div>
-                                </li><!-- end item -->
-                            </ul>
-
-                            <hr class="spacer-10 no-border">
-                            <a href="shop-sidebar-left.html" class="btn btn-default btn-block semi-circle btn-md">All Products</a>
-                        </div><!-- end widget -->
-                    </div><!-- end col -->
-                    <!-- end sidebar -->
+                  @include('frontend.partials.sidebar')
                     <div class="col-sm-9">
                         <div class="row">
                             <div class="col-sm-12 text-left">
@@ -215,11 +123,22 @@
                                     </div><!-- end tab-pane -->
                                     <div class="tab-pane" id="billing-info">
                                         <div class="row">
+
                                             <script src="https://js.stripe.com/v3/"></script>
 
                                             <form action="{{route('main.checkout.store')}}" method="post" id="payment-form">
+
                                                 @csrf
                                             <div class="col-md-6">
+                                                @if ($errors->any())
+                                                    <div class="alert alert-danger">
+                                                        <ul>
+                                                            @foreach ($errors->all() as $error)
+                                                                <li>{{ $error }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
                                                 <h5 class="thin subtitle">Billing Address</h5>
                                                 <div class="form-group input-group-lg @if($errors->has('country')){{'has-error'}}@endif">
                                                     <select class="form-control" name="country">
@@ -480,9 +399,18 @@
                                                         <div class="form-group @if($errors->has('name')){{'has-error'}} @endif">
                                                             <input id="name" type="text" placeholder="First Name" name="name" value="{{old('name')}}" class="form-control input-md required">
                                                         </div><!-- end form-group -->
+                                                        @if(Auth()->user())
                                                         <div class="form-group  @if($errors->has('email')){{'has-error'}} @endif">
-                                                            <input id="email" type="text" placeholder="Email" name="email" value="{{old('email')}}" class="form-control input-md required email">
+                                                            <input id="email" type="text" placeholder="Email" name="email" value="{{Auth()->user()->email}}" class="form-control input-md required email" readonly>
+                                                       
                                                         </div><!-- end form-group -->
+                                                        @else
+                                                         <div class="form-group  @if($errors->has('email')){{'has-error'}} @endif">
+                                                            <input id="email" type="text" placeholder="Email" name="email" value="{{old('email')}}" class="form-control input-md required email">
+                                                       
+                                                        </div><!-- end form-group -->
+                                                        @endif
+
                                                     </div><!-- end col -->
                                                     <div class="col-sm-6">
                                                       

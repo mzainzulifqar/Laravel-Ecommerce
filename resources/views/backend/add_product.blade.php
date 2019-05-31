@@ -191,6 +191,7 @@ reader.addEventListener("load", function(e) {
 var image = e.target.result;
 $("#imgthumbnail").attr('src', image);
 });
+
 });
 $('#btn-add').on('click', function(e){
 	

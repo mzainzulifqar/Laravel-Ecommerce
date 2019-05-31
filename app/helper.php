@@ -11,3 +11,8 @@ function oldformat($value)
 	$a = str_replace(',','',$value);
 	return $a;
 }
+
+function currentyear()
+{
+	return date('Y');
+}

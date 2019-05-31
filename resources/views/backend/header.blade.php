@@ -14,7 +14,9 @@
     <!-- Bootstrap core CSS -->
     
   <link rel="stylesheet" type="text/css" href="{{asset('public/theme/admin.css')}}" rel="stylesheet">
+   
     <link rel="stylesheet" type="text/css" href="{{asset('public/theme/bootstrap.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{asset('public/theme/custom.css')}}" rel="stylesheet">
     <!-- Latest compiled and minified CSS -->
 {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
  --}}     <!-- Custom styles for this template -->
@@ -25,7 +27,7 @@
 
 
 
-
+@yield('css')
     <style>
       .bd-placeholder-img {
         font-size: 1.125rem;
@@ -76,7 +78,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link @if(request()->url() == route('admin.order.list')) {{'active'}}@endif" href="{{route('admin.order.list')}}">
               <span data-feather="file"></span>
               Orders
             </a>

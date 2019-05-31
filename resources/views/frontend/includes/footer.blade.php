@@ -101,7 +101,7 @@
                 
                 <div class="row text-center">
                     <div class="col-sm-12">
-                        <p class="text-sm">&COPY; 2017. Made with <i class="fa fa-heart text-danger"></i> by <a href="javascript:void(0);">DiamondCreative.</a></p>
+                        <p class="text-sm" style="color:white;font-size:15px;">&COPY; {{currentyear()}}. Made with <i class="fa fa-heart text-danger"></i> by Zain Zulifqar.</p>
                     </div><!-- end col -->
                 </div><!-- end row -->
             </div><!-- end container -->
@@ -110,6 +110,12 @@
         
         
         <!-- JavaScript Files -->
+         @yield('scripts')
+        <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
+
+        <script src="{{asset('public/js/algolia.js')}}"></script>
+        
         <script type="text/javascript" src="{{asset('public/theme/js/jquery-3.1.1.min.js')}}"></script>
         <script type="text/javascript" src="{{asset('public/theme/js/bootstrap.min.js')}}"></script>
         <script type="text/javascript" src="{{asset('public/theme/js/owl.carousel.min.js')}}"></script>
@@ -119,8 +125,7 @@
         <script type="text/javascript" src="{{asset('public/theme/js/pace.min.js')}}"></script>
         <script type="text/javascript" src="{{asset('public/theme/js/star-rating.min.js')}}"></script>
         <script type="text/javascript" src="{{asset('public/theme/js/wow.min.js')}}"></script>
-        <script type="text/javascript" src="{{asset('public/theme/https://maps.googleapis.com/maps/api/js')}}"></script>
-        <script type="text/javascript" src="{{asset('public/theme/js/gmaps.js')}}"></script>
+  
         <script type="text/javascript" src="{{asset('public/theme/js/swiper.min.js')}}"></script>
         <script type="text/javascript" src="{{asset('public/theme/js/main.js')}}"></script>
          <script>
@@ -152,12 +157,29 @@
                 }, delay);
         @endif
      
+      @if($errors->any())
+            
+            
+                  var delay = 3000;
+                setTimeout(function() {
+                    var x = document.getElementById("snackbar");
+
+            // Add the "show" class to DIV
+            x.className = "show";
+
+
+            // After 3 seconds, remove the show class from DIV
+            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+                
+                }, delay);
+        @endif
+     
 
 
     });
     
             </script>
-        @yield('scripts')
+       
         
     </body>
 

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class MainController extends Controller
 {
     public function index(){
-    	
+    
        $category  = Category::whereHas('greatgrandfather',function($query)
         {
                 $query->where('parent_id',0);
@@ -39,6 +39,23 @@ class MainController extends Controller
     	$product = Product::inRandomOrder()->take(12)->get();
     	return view('frontend.shop',compact('product','category'));
     }
+
+
+    public function search(Request $request){
+      $this->validate($request,[
+          'query' => 'required|min:3',
+        ]);
+      $q = $request->input('query');
+
+      $product = Product::search($q)->paginate(12);
+      
+      $category = Category::whereHas('greatgrandfather',function($query)
+      {
+          $query->where("parent_id",'=',0);
+      })->get();
+        return view('frontend.search',compact('category','product'));
+    }
+
 
     public function fetchwithcategory(Request $request){
         $cat = '';
@@ -70,3 +87,6 @@ class MainController extends Controller
        return view('frontend.category',compact('product','category','categoryName'));
     }
 }
+
+
+

@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Coupon;
 use App\Http\Requests\CheckoutRequest;
+use App\Mail\VerifyOrder;
+use App\Order;
+use App\OrderProduct;
 use App\Product;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Charge;
 use Stripe\Stripe;
 
@@ -21,11 +26,24 @@ class CheckoutController extends Controller
      */
     public function index()
     {
+
+        if(Cart::content()->count() <= 0)
+        {
+            return redirect('/');
+        }
+        else if(Auth::user() && request()->is('guestcheckout'))
+        
+        {
+            return back();
+        }
+
         
         $category  = Category::whereHas('greatgrandfather',function($query)
         {
                 $query->where('parent_id',0);
         })->get();
+
+         $product = Product::where('featured','=',1)->take(3)->get();
         return view('frontend.checkout')->with(
             [
                 'category' => $category,
@@ -33,6 +51,7 @@ class CheckoutController extends Controller
                 'newsubtotal' => $this->getNumber()->get('newsubtotal'),
                 'newtax' => $this->getNumber()->get('newtax'),
                 'newtotal' => $this->getNumber()->get('newtotal'),
+                'product' => $product
             ]);
     
 
@@ -50,7 +69,7 @@ class CheckoutController extends Controller
         $discount = Session()->get('coupon')['discount'] ?? 0;
         $newsubtotal = oldformat(Cart::subtotal()) - $discount;
         $newtax  = $newsubtotal * $tax;
-        $newtotal = $newsubtotal +$newtax;
+        $newtotal = $newsubtotal + $newtax;
 
         return collect([
                     'discount' => $discount,
@@ -81,6 +100,7 @@ class CheckoutController extends Controller
      */
     public function store(CheckoutRequest $request)
     {
+        // dd($request->all());
             
                     $charge = '';
             $error = '';
@@ -106,26 +126,54 @@ class CheckoutController extends Controller
                         'discount' => collect(Session()->get('coupon')['discount'])->toJson(),
                     ],
                 ]);
-            }
 
-             catch (\Stripe\Error\Base $e) {
-                // echo $e->getMessage();  
-                 return back()->with('message',$e->getMessage());
-                } catch (Exception $e) {
-                  // Catch any other non-Stripe exceptions
-                    echo "whoops";
-                }
-                // dd($charge);
-
-
-                if($charge)
-                {
-
+              
+                   $order = $this->addToOrderTables($request,null);
+                   Mail::to($order->billing_email)->send(new VerifyOrder($order));
                     Cart::destroy();
                     Session()->forget('coupon');
                     return back()->with('message','Payment Successful');
-                }
+            
+        }
+
+             catch (\Stripe\Error\Base $e) {
+                 $this->addToOrderTables($request,$e->getMessage());
+                 return back()->with('message',$e->getMessage());
+                }         
+                
                        
+    }
+
+    protected function addToOrderTables($request ,$error)
+    {
+         $order = Order::create([
+                        'user_id' => auth()->user() ? auth()->user()->id : 0,
+                        'billing_email' => $request->email,
+                        'billing_name' => $request->name,
+                        'billing_address1' => $request->billingaddress1,
+                        'billing_address2' => $request->billingaddress2,
+                        'billing_city' => $request->billingcity,
+                        'country' => $request->country,
+                        'billing_postal_code' => $request->billingzip,
+                        'billing_phone' => $request->phone,
+                        'billing_discount' => $this->getNumber()->get('discount'),
+                        'billing_discount_code'=> Session()->get('coupon')['code'] ? Session()->get('coupon')['code'] : null, 
+                        'billing_subtotal' => $this->getNumber()->get('newsubtotal'),
+                        'billing_tax' =>$this->getNumber()->get('newtax'),
+                        'billing_total' => $this->getNumber()->get('newtotal'),
+                        'error' =>$error,
+               ]);
+
+                   
+                        foreach(Cart::content() as $item)
+                        {
+                           $result =  OrderProduct::create([
+                                'order_id' => $order->id,
+                                'product_id' => $item->id,
+                                'quantity' => $item->qty
+                            ]);
+                         }
+                  return $order;
     }
 
     /**

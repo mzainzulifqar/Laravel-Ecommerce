@@ -18,7 +18,9 @@ class CartController extends Controller
     public function index()
     {
        $category = Category::all();
-        return view('frontend.cart',compact('category'));        
+       $product = Product::where('featured','=',1)->take(3)->get();
+    
+        return view('frontend.cart',compact('category','product'));        
     }
 
 
@@ -56,7 +58,7 @@ class CartController extends Controller
         {
             Cart::add($request->id,$request->name,1,$request->dd_price, ['size' => 'large'])->associate('App\Product');
             // dd(Cart::content());
-            return redirect()->to('/cart')->with('message','Item Added To Cart Successfully');
+            return redirect()->to('/cart')->with('message','Item added to cart Successfully');
        }
     }
 

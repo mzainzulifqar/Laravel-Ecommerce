@@ -3,7 +3,8 @@
 
 <!-- Mirrored from diamantgjota.com/themes/plus-v1.3.0/home-v5.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 18 May 2019 13:09:15 GMT -->
 <head>
-    <title>Plus - E-Commerce Template</title>
+    @yield('title')
+    
     <meta charset="utf-8">
     <meta name="description" content="Plus E-Commerce Template">
     <meta name="author" content="Diamant Gjota" />
@@ -18,6 +19,8 @@
     <link rel="icon" href="{{asset('public/theme/img/favicon.ico')}}" type="image/x-icon">
     
     <!-- css files -->
+    <link  rel="stylesheet" type="text/css" href="{{asset('public/css/algolia.css')}}" />
+
     <link rel="stylesheet" type="text/css" href="{{asset('public/theme/css/bootstrap.min.css')}}" />
     <link rel="stylesheet" type="text/css" href="{{asset('public/theme/css/font-awesome.min.css')}}" />
     <link rel="stylesheet" type="text/css" href="{{asset('public/theme/css/owl.carousel.min.css')}}" />
@@ -28,11 +31,13 @@
     <!-- this is default skin you can replace that with: dark.css, yellow.css, red.css ect -->
     <link id="pagestyle" rel="stylesheet" type="text/css" href="{{asset('public/theme/css/default.css')}}" />
      <link  rel="stylesheet" type="text/css" href="{{asset('public/theme/css/custom.css')}}" />
+        
     
     <!-- Google fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700,800&amp;subset=latin-ext" rel="stylesheet">
+@yield('css')
     
 </head>
     <body>
@@ -82,12 +87,13 @@
                             </span>    
                         </a>
                         <ul class="w-100">
-                            <li><a href="javascript:void(0);"><img src="img/flags/flag-english.jpg" class="mr-5" alt="">English</a></li>
-                            <li class="active"><a href="javascript:void(0);"><img src="img/flags/flag-french.jpg" class="mr-5" alt="">French</a></li>
-                            <li><a href="javascript:void(0);"><img src="img/flags/flag-german.jpg" class="mr-5" alt="">German</a></li>
-                            <li><a href="javascript:void(0);"><img src="img/flags/flag-spain.jpg" class="mr-5" alt="">Spain</a></li>
+                            <li><a href="javascript:void(0);"><img src="{{asset('public/theme/img/flags/flag-english.jp')}}g" class="mr-5" alt="">English</a></li>
+                            <li class="active"><a href="javascript:void(0);"><img src="{{asset('public/theme/img/flags/flag-french.jpg')}}" class="mr-5" alt="">French</a></li>
+                            <li><a href="javascript:void(0);"><img src="{{asset('public/theme/img/flags/flag-german.jpg')}}" class="mr-5" alt="">German</a></li>
+                            <li><a href="javascript:void(0);"><img src="{{asset('public/theme/img/flags/flag-spain.jpg')}}" class="mr-5" alt="">Spain</a></li>
                         </ul>
                     </li>
+                    @if(Auth::check())
                     <li class="linkdown">
                         <a href="javascript:void(0);">
                             <i class="fa fa-user mr-5"></i>
@@ -97,7 +103,15 @@
                             </span>
                         </a>
                         <ul class="w-150">
-                            <li><a href="login.html">Login</a></li>
+                            <li> <a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form></li>
                             <li><a href="register.html">Create Account</a></li>
                             <li class="divider"></li>
                             <li><a href="wishlist.html">Wishlist (5)</a></li>
@@ -105,6 +119,9 @@
                             <li><a href="checkout.html">Checkout</a></li>
                         </ul>
                     </li>
+                    @else
+                    <li><a href="{{route('login')}}">Login/Sign Up</a></li>
+                    @endif
                     <li class="linkdown">
                         <a href="javascript:void(0);">
                             <i class="fa fa-shopping-basket mr-5"></i>
@@ -116,58 +133,44 @@
                         <ul class="cart w-250">
                             <li>
                                 <div class="cart-items">
+                                    @if(Cart::content()->count() > 0)
                                     <ol class="items">
+                                        @foreach( Cart::content() as $item)
                                         <li> 
                                             <a href="shop-single-product-v1.html" class="product-image">
-                                                <img src="img/products/men_06.jpg" alt="Sample Product ">
+                                                <img src="{{asset('public/images/'.$item->model->thumbnail)}}" alt="Sample Product ">
                                             </a>
                                             <div class="product-details">
-                                                <div class="close-icon"> 
-                                                    <a href="javascript:void(0);"><i class="fa fa-close"></i></a>
+                                                <div class="close-icon">
+                                                  <form  action="{{route('main.cart.remove')}}" method="post">
+                                                            @csrf
+                                                            @method('POST')
+                                                            <input type="hidden" value="{{$row->rowId}}" name="id">
+                                                        <button type="submit" class="close">×</button>
+                                                    </form> 
+                                                    <a </a>
                                                 </div>
                                                 <p class="product-name"> 
-                                                    <a href="shop-single-product-v1.html">Lorem Ipsum dolor sit</a> 
+                                                    <a href="shop-single-product-v1.html">{{$item->name}}</a> 
                                                 </p>
-                                                <strong>1</strong> x <span class="price text-primary">$59.99</span>
+                                                <strong>{{$item->qty}}</strong> x <span class="price text-primary">{{$item->price}}</span>
                                             </div><!-- end product-details -->
                                         </li><!-- end item -->
-                                        <li> 
-                                            <a href="shop-single-product-v1.html" class="product-image">
-                                                <img src="img/products/shoes_01.jpg" alt="Sample Product ">
-                                            </a>
-                                            <div class="product-details">
-                                                <div class="close-icon"> 
-                                                    <a href="javascript:void(0);"><i class="fa fa-close"></i></a>
-                                                </div>
-                                                <p class="product-name"> 
-                                                    <a href="shop-single-product-v1.html">Lorem Ipsum dolor sit</a> 
-                                                </p>
-                                                <strong>1</strong> x <span class="price text-primary">$39.99</span>
-                                            </div><!-- end product-details -->
-                                        </li><!-- end item -->
-                                        <li> 
-                                            <a href="shop-single-product-v1.html" class="product-image">
-                                                <img src="img/products/bags_07.jpg" alt="Sample Product ">
-                                            </a>
-                                            <div class="product-details">
-                                                <div class="close-icon"> 
-                                                    <a href="javascript:void(0);"><i class="fa fa-close"></i></a>
-                                                </div>
-                                                <p class="product-name"> 
-                                                    <a href="shop-single-product-v1.html">Lorem Ipsum dolor sit</a> 
-                                                </p>
-                                                <strong>1</strong> x <span class="price text-primary">$29.99</span>
-                                            </div><!-- end product-details -->
-                                        </li><!-- end item -->
+                                        @endforeach()
+                                       
                                     </ol>
+
                                 </div>
                             </li>
                             <li>
                                 <div class="cart-footer">
                                     <a href="{{route('main.cart')}}" class="pull-left"><i class="fa fa-cart-plus mr-5"></i>View Cart</a>
-                                    <a href="checkout.html" class="pull-right"><i class="fa fa-shopping-basket mr-5"></i>Checkout</a>
+                                    <a href="{{route('main.checkout')}}" class="pull-right"><i class="fa fa-shopping-basket mr-5"></i>Checkout</a>
                                 </div>
                             </li>
+                            @else
+                                <h2 class="text-center">Cart Empty</h2>
+                                @endif
                         </ul>
                     </li>
                 </ul>
@@ -184,12 +187,29 @@
                         </a>
                     </div><!-- end col -->
                     <div class="col-sm-7 vertical-align text-center">
-                        <form>
+                        {{-- <form method="get" action="{{route('main.search')}}"> --}}
+
                             <div class="row grid-space-1">
-                                <div class="col-sm-6">
-                                    <input type="text" name="keyword" class="form-control input-lg" placeholder="Search">
-                                </div><!-- end col -->
-                                <div class="col-sm-3">
+                 
+
+                               <div class="col-sm-6">
+                                 {{--    <input type="text" name="query" value="{{Request()->input('query')}}" class="form-control input-lg" placeholder="Search"> --}}
+                                
+    <div class="aa-input-container" id="aa-input-container">
+        <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for Products..." name="search" autocomplete="off" />
+        <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+            <path d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+        </svg>
+    </div>
+                                <!-- HTML Markup -->
+        
+</div>
+
+
+                                <!-- end col -->
+
+
+                                {{-- <div class="col-sm-3">
                                     <select class="form-control input-lg" name="category">
                                         <option value="all">All Categories</option>
                                         <optgroup label="Mens">
@@ -227,12 +247,12 @@
                                             <option value="pc">PC</option>
                                         </optgroup>
                                     </select>
-                                </div><!-- end col -->
-                                <div class="col-sm-3">
-                                    <input type="submit"  class="btn btn-default btn-block btn-lg" value="Search">
+                                </div>
+ --}}                                <div class="col-sm-3">
+                                   {{--  <input type="submit"  class="btn btn-default btn-block btn-lg" value="Search"> --}}
                                 </div><!-- end col -->
                             </div><!-- end row -->
-                        </form>
+                        {{-- </form> --}}
                     </div><!-- end col -->
                     <div class="col-sm-2 vertical-align header-items hidden-xs">
                         <div class="header-item mr-5">
@@ -262,7 +282,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a href="javascript:void(0);" class="navbar-brand visible-xs">
-                        <img src="img/logo.png" alt="logo">
+                        <img src="{{asset('public/theme/img/logo.png')}}" alt="logo">
                     </a>
                 </div>
                 <div id="navbar-collapse-3" class="navbar-collapse collapse">
@@ -378,150 +398,7 @@
                         <!-- elements -->
                         <li><a href="elements.html">Elements</a></li>
                         <!-- Collections -->
-                        <li class="dropdown yamm-fw"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Collections<i class="fa fa-angle-down ml-5"></i></a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <div class="yamm-content">
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-3">
-                                                <a href="javascript:void(0);">
-                                                    <figure class="zoom-out">
-                                                        <img alt="" src="img/banners/collection_01.jpg">
-                                                    </figure>
-                                                </a>
-                                            </div><!-- end col -->
-                                            <div class="col-xs-12 col-sm-3">
-                                                <a href="javascript:void(0);">
-                                                    <figure class="zoom-in">
-                                                        <img alt="" src="img/banners/collection_02.jpg">
-                                                    </figure>
-                                                </a>
-                                            </div><!-- end col -->
-                                            <div class="col-xs-12 col-sm-3">
-                                                <a href="javascript:void(0);">
-                                                    <figure class="zoom-out">
-                                                        <img alt="" src="img/banners/collection_03.jpg">
-                                                    </figure>
-                                                </a>
-                                            </div><!-- end col -->
-                                            <div class="col-xs-12 col-sm-3">
-                                                <a href="javascript:void(0);">
-                                                    <figure class="zoom-in">
-                                                        <img alt="" src="img/banners/collection_04.jpg">
-                                                    </figure>
-                                                </a>
-                                            </div><!-- end col -->
-                                        </div><!-- end row -->
-                                        
-                                        <hr class="spacer-20 no-border">
-                                        
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-3">
-                                                <h6>Pellentes que nec diam lectus</h6>
-                                                <p>Proin pulvinar libero quis auctor pharet ra. Aenean fermentum met us orci, sedf eugiat augue pulvina r vitae. Nulla dolor nisl, molestie nec aliquam vitae, gravida sodals dolor...</p>
-                                                <button type="button" class="btn btn-default round btn-md">Read more</button>
-                                            </div><!-- end col -->
-                                            <div class="col-xs-12 col-sm-3">
-                                                <div class="thumbnail store style1">
-                                                    <div class="header">
-                                                        <div class="badges">
-                                                            <span class="product-badge top left white-backgorund text-primary semi-circle">Sale</span>
-                                                            <span class="product-badge top right text-primary">
-                                                                <i class="fa fa-star"></i>
-                                                                <i class="fa fa-star"></i>
-                                                                <i class="fa fa-star"></i>
-                                                                <i class="fa fa-star"></i>
-                                                                <i class="fa fa-star-half-o"></i>
-                                                            </span>
-                                                        </div>
-                                                        <figure class="layer">
-                                                            <img src="img/products/men_01.jpg" alt="">
-                                                        </figure>
-                                                        <div class="icons">
-                                                            <a class="icon semi-circle" href="javascript:void(0);"><i class="fa fa-heart-o"></i></a>
-                                                            <a class="icon semi-circle" href="javascript:void(0);"><i class="fa fa-gift"></i></a>
-                                                            <a class="icon semi-circle" href="javascript:void(0);" data-toggle="modal" data-target=".productQuickView"><i class="fa fa-search"></i></a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="caption">
-                                                        <h6 class="thin"><a href="javascript:void(0);">Lorem Ipsum dolor sit</a></h6>
-                                                        <div class="price">
-                                                            <small class="amount off">$68.99</small>
-                                                            <span class="amount text-primary">$59.99</span>
-                                                        </div>
-                                                        <a href="javascript:void(0);"><i class="fa fa-cart-plus mr-5"></i>Add to cart</a>
-                                                    </div><!-- end caption -->
-                                                </div><!-- end thumbnail -->
-                                            </div><!-- end col -->
-                                            <div class="col-xs-12 col-sm-3">
-                                                <div class="thumbnail store style1">
-                                                    <div class="header">
-                                                        <div class="badges">
-                                                            <span class="product-badge top left white-backgorund text-primary semi-circle">Sale</span>
-                                                            <span class="product-badge top right text-primary">
-                                                                <i class="fa fa-star"></i>
-                                                                <i class="fa fa-star"></i>
-                                                                <i class="fa fa-star"></i>
-                                                                <i class="fa fa-star"></i>
-                                                                <i class="fa fa-star-half-o"></i>
-                                                            </span>
-                                                        </div>
-                                                        <figure class="layer">
-                                                            <img src="img/products/women_01.jpg" alt="">
-                                                        </figure>
-                                                        <div class="icons">
-                                                            <a class="icon semi-circle" href="javascript:void(0);"><i class="fa fa-heart-o"></i></a>
-                                                            <a class="icon semi-circle" href="javascript:void(0);"><i class="fa fa-gift"></i></a>
-                                                            <a class="icon semi-circle" href="javascript:void(0);" data-toggle="modal" data-target=".productQuickView"><i class="fa fa-search"></i></a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="caption">
-                                                        <h6 class="thin"><a href="javascript:void(0);">Lorem Ipsum dolor sit</a></h6>
-                                                        <div class="price">
-                                                            <small class="amount off">$68.99</small>
-                                                            <span class="amount text-primary">$59.99</span>
-                                                        </div>
-                                                        <a href="javascript:void(0);"><i class="fa fa-cart-plus mr-5"></i>Add to cart</a>
-                                                    </div><!-- end caption -->
-                                                </div><!-- end thumbnail -->
-                                            </div><!-- end col -->
-                                            <div class="col-xs-12 col-sm-3">
-                                                <div class="thumbnail store style1">
-                                                    <div class="header">
-                                                        <div class="badges">
-                                                            <span class="product-badge top left white-backgorund text-primary semi-circle">Sale</span>
-                                                            <span class="product-badge top right text-primary">
-                                                                <i class="fa fa-star"></i>
-                                                                <i class="fa fa-star"></i>
-                                                                <i class="fa fa-star"></i>
-                                                                <i class="fa fa-star"></i>
-                                                                <i class="fa fa-star-half-o"></i>
-                                                            </span>
-                                                        </div>
-                                                        <figure class="layer">
-                                                            <img src="img/products/kids_01.jpg" alt="">
-                                                        </figure>
-                                                        <div class="icons">
-                                                            <a class="icon semi-circle" href="javascript:void(0);"><i class="fa fa-heart-o"></i></a>
-                                                            <a class="icon semi-circle" href="javascript:void(0);"><i class="fa fa-gift"></i></a>
-                                                            <a class="icon semi-circle" href="javascript:void(0);" data-toggle="modal" data-target=".productQuickView"><i class="fa fa-search"></i></a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="caption">
-                                                        <h6 class="thin"><a href="javascript:void(0);">Lorem Ipsum dolor sit</a></h6>
-                                                        <div class="price">
-                                                            <small class="amount off">$68.99</small>
-                                                            <span class="amount text-primary">$59.99</span>
-                                                        </div>
-                                                        <a href="javascript:void(0);"><i class="fa fa-cart-plus mr-5"></i>Add to cart</a>
-                                                    </div><!-- end caption -->
-                                                </div><!-- end thumbnail -->
-                                            </div><!-- end col -->
-                                        </div><!-- end row -->
-                                    </div><!-- end yamm-content -->
-                                </li><!-- end li -->
-                            </ul><!-- end dropdown-menu -->
-                        </li><!-- end dropdown -->
+                        
                     </ul><!-- end navbar-nav -->
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown right">
@@ -550,3 +427,11 @@
                 </div><!-- end navbar collapse -->
             </div><!-- end container -->
         </div><!-- end navbar -->
+
+       @section('scripts')
+
+        <!-- Include AlgoliaSearch JS Client and autocomplete.js library -->
+    <!-- Include AlgoliaSearch JS Client and autocomplete.js library -->
+        
+        
+        @endsection()

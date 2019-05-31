@@ -1,8 +1,16 @@
 @extends('frontend.layouts.app')
+@section('title')
+<title>Best Price</title>
+@endsection()
+
 @section('section')
  
 {{-- <div class="se-pre-con"></div> --}}
 <div id="snackbar">@if(session()->has('message')){{session()->get('message')}}@endif</div>
+
+  
+   
+
         <!-- start section -->
         <section class="section light-backgorund">
             <div class="container">
@@ -38,29 +46,39 @@
                         </div><!-- end navbar-vertical -->
                     </div><!-- end col -->
                     <div class="col-sm-8 col-md-9">
-                        <div class="owl-carousel slider owl-theme">
-                            <div class="item">
-                                <figure>
-                                    <a href="javascript:void(0);">
-                                        <img src="{{asset('public/theme/img/slider/slider_10.jpg')}}" alt=""/>
-                                    </a>
-                                </figure>
-                            </div><!-- end item -->
-                            <div class="item">
-                                <figure>
-                                    <a href="javascript:void(0);">
-                                        <img src="{{asset('public/theme/img/slider/slider_09.jpg')}}" alt=""/>
-                                    </a>
-                                </figure>
-                            </div><!-- end item -->
-                            <div class="item">
-                                <figure>
-                                    <a href="javascript:void(0);">
-                                        <img src="{{asset('public/theme/img/slider/slider_08.jpg')}}" alt=""/>
-                                    </a>
-                                </figure>
-                            </div><!-- end item -->
-                        </div><!-- end owl carousel -->
+                        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+    <li data-target="#myCarousel" data-slide-to="1"></li>
+    <li data-target="#myCarousel" data-slide-to="2"></li>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+    <div class="item active">
+      <img src="{{asset('public/theme/img/slider/slider_09.jpg')}}" alt="Los Angeles">
+    </div>
+
+    <div class="item">
+      <img src="{{asset('public/theme/img/slider/slider_09.jpg')}}" alt="Chicago">
+    </div>
+
+    <div class="item">
+      <img src="{{asset('public/theme/img/slider/slider_08.jpg')}}" alt="New York">
+    </div>
+  </div>
+
+  <!-- Left and right controls -->
+  <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#myCarousel" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
                     </div><!-- end col -->
                 </div><!-- end row -->
             </div><!-- end container -->
@@ -174,7 +192,7 @@
 
     
                     <div class="col-sm-6 col-md-3">
-                        <div class="thumbnail store style1">
+                        <div class="thumbnail store style1" >
                             <div class="header">
                                 <div class="badges">
                                     @if(!empty($p->discount))<span class="product-badge top left warning-background text-white semi-circle">Discount {{$p->discount}}%</span>
@@ -187,26 +205,32 @@
                                         <i class="fa fa-star-half-o"></i>
                                     </span>
                                 </div>
-                                <figure class="layer">
+                                <figure class="">
                                     <a href="javascript:void(0);">
-                                        <img class="front" src="{{asset('public/images/'.$p->thumbnail)}}" alt="">
-                                        <img class="back" src="{{asset('public/images/'.$p->thumbnail)}}" alt="">
+                                       <div class="img-hover-zoom">
+                                        <img class="front"style="width:283px;height:300px;" src="{{asset('public/images/'.$p->thumbnail)}}" alt="">
+                                        </div>
+                                        <div class="img-hover-zoom">
+                                        <img class="back" style="width:283px;height:300px;" src="{{asset('public/images/'.$p->thumbnail)}}" alt="">
+                                    </div>
+                                  
                                     </a>
                                 </figure>
-                                <div class="icons">
+                            {{--     <div class="icons">
                                     <a class="icon semi-circle" href="javascript:void(0);"><i class="fa fa-heart-o"></i></a>
                                     <a class="icon semi-circle" href="javascript:void(0);"><i class="fa fa-gift"></i></a>
                                     <a class="icon semi-circle" href="javascript:void(0);" data-toggle="modal" data-target=".productQuickView-{{$p->id}}"><i class="fa fa-search"></i></a>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="caption">
                                 <h6 class="regular"><a href="{{route('main.single_product',$p->slug)}}">{{$p->title}}</a></h6>
+                                <p>{{substr($p->description,0,30)}}...</p>
                                 <div class="price">
                                     <small class="amount off">${{$p->price}}</small>
                                     <span class="amount text-primary">{{$p->presentPrice($p->discount_price)}}</span>
                                 </div>
                                 {{-- <a href="javascript:void(0);"><i class="fa fa-cart-plus mr-5"></i>Add to cart</a> --}}
-                                <form action="{{route('main.cart.store')}}" method="post">
+                                <form style="display:inline-block;"action="{{route('main.cart.store')}}" method="post">
                                     @csrf
                                         <input type="hidden" name="name" value="{{$p->title}}">
                                         <input type="hidden" name="dd_price" value="{{$p->discount_price}}">
@@ -215,6 +239,7 @@
 
 
                                 </form>
+                                <a style="display:inline-block;"class="icon semi-circle" href="javascript:void(0);"><i class="fa fa-heart-o"></i></a>
                             </div><!-- end caption -->
                         </div><!-- end thumbnail -->
                     </div><!-- end col -->
@@ -677,3 +702,4 @@
         <!-- end section -->
         
      @endsection()
+    

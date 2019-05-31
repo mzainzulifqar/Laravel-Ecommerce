@@ -25,7 +25,7 @@ class RedirectIfAuthenticated
             $link = 'admin/dashboard';
             break;
             default:
-            $link = '/home';
+            $link = '/';
             break;
         }
         if (Auth::guard($guard)->check()) {
