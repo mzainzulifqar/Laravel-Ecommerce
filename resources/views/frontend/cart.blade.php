@@ -94,7 +94,7 @@
                                     @endif                                
                                 <hr class="spacer-10 no-border">
                                 
-                                <a href="{{route('main.shop')}}" class="btn btn-light semi-circle btn-md pull-left">
+                                <a href="{{url('/product/shop')}}" class="btn btn-light semi-circle btn-md pull-left">
                                     <i class="fa fa-arrow-left mr-5"></i> Continue shopping
                                 </a>
 

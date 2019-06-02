@@ -43,7 +43,7 @@ class CheckoutController extends Controller
                 $query->where('parent_id',0);
         })->get();
 
-         $product = Product::where('featured','=',1)->take(3)->get();
+         $product = Product::where('featured','=',1)->take(3)->inRandomOrder()->get();
         return view('frontend.checkout')->with(
             [
                 'category' => $category,
@@ -132,7 +132,8 @@ class CheckoutController extends Controller
                    Mail::to($order->billing_email)->send(new VerifyOrder($order));
                     Cart::destroy();
                     Session()->forget('coupon');
-                    return back()->with('message','Payment Successful');
+                    Session()->put('order_check',1);
+                    return redirect('/confirmation')->with('message','Payment and Order Successfully Placed');
             
         }
 
@@ -143,6 +144,22 @@ class CheckoutController extends Controller
                 
                        
     }
+
+    public function confirmation(){
+        if(Session()->get('order_check') == 1)
+        {
+               $category = Category::whereHas('greatgrandfather',function($query){
+              $query->where('parent_id','=',0);
+                        })->get();
+               Session()->forget('order_check');
+                return view('frontend.order-confirmation',compact('category'));
+
+                }
+                else{
+                    return redirect('/');
+                }  
+
+                  }
 
     protected function addToOrderTables($request ,$error)
     {

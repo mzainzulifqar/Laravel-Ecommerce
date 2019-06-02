@@ -15,12 +15,8 @@ use App\Category;
 
 
 Route::get('/testing',function()
- {  
- 	 $category  = Category::whereHas('greatgrandfather',function($query)
-        {
-                $query->where('parent_id',0);
-        })->get();
-	return view('frontend.algolia',compact('category'));
+ {
+ 	
 });
 
 
@@ -33,12 +29,16 @@ Route::group(['as' => 'main.'],function(){
 	Route::get('/cart','CartController@index')->name('cart');
 	Route::post('/cart/store','CartController@store')->name('cart.store');
 	Route::post('/cart/remove','CartController@destroy')->name('cart.remove');
-	Route::post('/cart/saveForLater','CartController@saveForLater')->name('cart.saveForLater');
-	Route::post('/cart/movetocart','CartController@movetocart')->name('cart.movetocart');
-	Route::post('/cart/remove/save','CartController@removefromsave')->name('cart.removefromsave');
+	// Wishlist Views
+	Route::get('/cart/saveForLater/view','WishlistController@index')->name('cart.saveForLater.view')->middleware('auth:web');
+	Route::post('/cart/saveForLater','WishlistController@saveForLater')->name('cart.saveForLater')->middleware('auth:web');
+	Route::post('/cart/movetocart','WishlistController@movetocart')->name('cart.movetocart')->middleware('auth:web');
+	Route::post('/cart/remove/save','WishlistController@removefromsave')->name('cart.removefromsave')->middleware('auth:web');
+
 	Route::post('/cart/updateqty','CartController@updateqty')->name('cart.updateqty');
 	//Checkout Routes
 	Route::get('/checkout','CheckoutController@index')->name('checkout')->middleware('auth');
+	Route::get('/confirmation','CheckoutController@confirmation')->name('confirmation');
 	Route::get('/guestcheckout','CheckoutController@index')->name('guestcheckout');
 	Route::post('/checkout/store','CheckoutController@store')->name('checkout.store');
 	//Coupon Routes
@@ -58,8 +58,14 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-
-
+/**
+     
+     *User Routes
+     */
+Route::group(['as' => 'user.','middleware' => ['auth:web'],'prefix' => 'user'],function(){
+	Route::get('/order_list','UserController@order_list')->name('order_list');
+	
+});
 
 	/**
      

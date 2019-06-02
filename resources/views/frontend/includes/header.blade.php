@@ -112,11 +112,11 @@
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form></li>
-                            <li><a href="register.html">Create Account</a></li>
+                            
                             <li class="divider"></li>
-                            <li><a href="wishlist.html">Wishlist (5)</a></li>
+                            <li><a href="{{route('main.cart.saveForLater.view')}}">Wishlist</a></li>
                             <li><a href="{{route('main.cart')}}">My Cart</a></li>
-                            <li><a href="checkout.html">Checkout</a></li>
+                            <li><a href="{{route('main.checkout')}}">Checkout</a></li>
                         </ul>
                     </li>
                     @else
@@ -145,7 +145,7 @@
                                                   <form  action="{{route('main.cart.remove')}}" method="post">
                                                             @csrf
                                                             @method('POST')
-                                                            <input type="hidden" value="{{$row->rowId}}" name="id">
+                                                            <input type="hidden" value="{{$item->rowId}}" name="id">
                                                         <button type="submit" class="close">×</button>
                                                     </form> 
                                                     <a </a>

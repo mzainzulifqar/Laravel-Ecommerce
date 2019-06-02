@@ -117,6 +117,7 @@
                       <a href="{{route('admin.order.update',['order'=>$o->id,'value'=>'cancel'])}}">Cancel</a>
                       <a href="{{route('admin.order.update',['order'=>$o->id,'value'=>'Awaiting'])}}">Awaiting</a>
                       <a href="{{route('admin.order.update',['order'=>$o->id,'value'=>'Disable'])}}">Disable</a>
+                      <a href="{{route('admin.order.update',['order'=>$o->id,'value'=>'Delieverd'])}}">Delieverd</a>
                     </div>
                   </div>
                     

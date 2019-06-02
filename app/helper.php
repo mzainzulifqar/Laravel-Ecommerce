@@ -12,6 +12,13 @@ function oldformat($value)
 	return $a;
 }
 
+function removeComaDollar($value)
+{
+	$a = str_replace(',','',$value);
+	$a = str_replace('$','',$a);
+	return $a;
+}
+
 function currentyear()
 {
 	return date('Y');

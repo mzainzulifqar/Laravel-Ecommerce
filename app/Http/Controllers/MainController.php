@@ -36,7 +36,7 @@ class MainController extends Controller
        $category  = Category::whereHas('greatgrandfather',function($query){
                 $query->where('parent_id',0);
         })->get();
-    	$product = Product::inRandomOrder()->take(12)->get();
+    	// $product = Product::inRandomOrder()->take(12)->get();
     	return view('frontend.shop',compact('product','category'));
     }
 

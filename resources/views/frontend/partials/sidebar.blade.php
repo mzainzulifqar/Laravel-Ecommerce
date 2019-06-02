@@ -12,10 +12,10 @@
                                     <a href="{{route('main.cart')}}">My Cart <span class="text-primary">({{Cart::content()->count()}})</span></a>
                                 </li>
                                 <li>
-                                    <a href="order-list.html">My Order</a>
+                                    <a href="{{route('user.order_list')}}">My Order</a>
                                 </li>
                                 <li>
-                                    <a href="wishlist.html">Wishlist <span class="text-primary">(5)</span></a>
+                                    <a href="{{route('main.cart.saveForLater.view')}}">Wishlist <span class="text-primary"></span></a>
                                 </li>
                                 <li>
                                     <a href="user-information.html">Settings</a>

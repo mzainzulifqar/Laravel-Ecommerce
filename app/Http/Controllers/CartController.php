@@ -18,7 +18,8 @@ class CartController extends Controller
     public function index()
     {
        $category = Category::all();
-       $product = Product::where('featured','=',1)->take(3)->get();
+       $product = Product::where('featured','=',1)->take(3)->inRandomOrder()->get();
+       
     
         return view('frontend.cart',compact('category','product'));        
     }
@@ -158,33 +159,9 @@ class CartController extends Controller
         return view('frontend.testing');
     }
 
-    public function movetocart(Request $request)
-    {
-        $item = Cart::instance('saveforlater')->get($request->rowid);
-            
-        
- 
-        $duplicate  = Cart::instance('default')->search( function ($cartItem, $rowId) use ($request)
-        {
-            return $cartItem->id === $request->id;
-        });
-           
-        if($duplicate->isNotEmpty())
-        {
-            return back();
-        }
-        else
-        {
+   
 
-
-
-                   Cart::instance('saveforlater')->remove($request->id);
-
-        Cart::instance('default')->add($item->id,$item->name,1,$item->price)->associate('App\Product');
-        return redirect('/cart')->with('message','Product moved to cart');
-    }
-
-    }
+    
 
     public function removefromsave(Request $request)
     {
