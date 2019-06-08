@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
 use App\Product;
+use App\Category;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
 
@@ -17,6 +17,7 @@ class CartController extends Controller
      */
     public function index()
     {
+
        $category = Category::all();
        $product = Product::where('featured','=',1)->take(3)->inRandomOrder()->get();
        
@@ -33,7 +34,7 @@ class CartController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**

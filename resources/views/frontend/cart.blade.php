@@ -1,15 +1,15 @@
 @extends('frontend.layouts.app')
-@section('section')        
+@section('section')
         <div class="breadcrumbs">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
                         <ul>
                             <li><a href="{{url('/')}}">Home</a></li>
-                            
+
                             <li class="active">Cart</li>
                         </ul><!-- end breadcrumb -->
-                    </div><!-- end col -->    
+                    </div><!-- end col -->
                 </div><!-- end row -->
             </div><!-- end container -->
         </div><!-- end breadcrumbs -->
@@ -18,7 +18,7 @@
 
 <!-- The actual snackbar -->
 <div id="snackbar">@if(session()->has('message')){{session()->get('message')}}@endif</div>
-        
+
         <!-- start section -->
         <section class="section white-backgorund">
             <div class="container">
@@ -30,13 +30,13 @@
                                 <h2 class="title">My Cart</h2>
                             </div><!-- end col -->
                         </div><!-- end row -->
-                        
+
                         <hr class="spacer-5"><hr class="spacer-20 no-border">
-                        
+
                         <div class="row">
                             <div class="col-sm-12">
                                 @if(Cart::count() > 0)
-                                <div class="table-responsive">    
+                                <div class="table-responsive">
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
@@ -63,7 +63,7 @@
                                                         <input type="hidden" value="{{$row->rowId}}" name="rowid">
                                                         <button type="submit" style="border:none;background:none;color:black;"><strong><b>Save for later</b></strong></button>
                                                     </form>
-                                                    
+
                                                 </td>
                                                 <td>
                                                     <span>{{$row->model->presentPrice($row->price)}}</span>
@@ -81,19 +81,19 @@
                                                             <input type="hidden" value="{{$row->rowId}}" name="id">
                                                         <button type="submit" class="close">×</button>
                                                     </form>
-                                                        
+
                                                 </td>
                                             </tr>
-                                          
+
                                            @endforeach()
                                         </tbody>
                                     </table><!-- end table -->
                                 </div><!-- end table-responsive -->
                                 @else
                                 <h2 class="text-center">{{Cart::count()}} Item in Cart</h2>
-                                    @endif                                
+                                    @endif
                                 <hr class="spacer-10 no-border">
-                                
+                              
                                 <a href="{{url('/product/shop')}}" class="btn btn-light semi-circle btn-md pull-left">
                                     <i class="fa fa-arrow-left mr-5"></i> Continue shopping
                                 </a>
@@ -109,20 +109,20 @@
                             </div><!-- end col -->
                         </div><!-- end row -->
                     </div><!-- end col -->
-                </div><!-- end row -->                
+                </div><!-- end row -->
             </div><!-- end container -->
         </section>
         <!-- end section -->
-               
+
        @endsection()
        @section('scripts')
           <script>
             $('document').ready(function(){
 
                         $('.qty').on('change',function(){
-                        
+
                         var rowId = $(this).attr("data");
-                        var qty = $(this).val();      
+                        var qty = $(this).val();
                             $.ajaxSetup({
                               headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -137,21 +137,21 @@
                     data:{qty:qty,rowId:rowId},
                     dataType: 'JSON',
                     /* remind that 'data' is the response of the AjaxController */
-                    success: function (data) { 
+                    success: function (data) {
                        if(data.status == 'success')
 
                        {
                         window.location.reload();
                         //  window.history.pushState("Details", "Title", "{{url('/')}}");
-                        
+
                         // $("body").load("{{url('/')}}");
-                         
+
                          //  window.location.replace('{{url('/')}}');
                         // location.reload();
-                       } 
+                       }
                     }
-                }); 
-                              
+                });
+
                                              } );
 
               /* Update item quantity */

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -18,6 +18,8 @@ class Admin extends Authenticatable
         'name', 'email', 'password',
     ];
 
+  
+        
     /**
      * The attributes that should be hidden for arrays.
      *

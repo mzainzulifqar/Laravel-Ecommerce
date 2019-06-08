@@ -1,5 +1,5 @@
 @extends('frontend.layouts.app')
-@section('section')        
+@section('section')
         <div class="breadcrumbs">
             <div class="container">
                 <div class="row">
@@ -8,13 +8,13 @@
                             <li><a href="{{url('/')}}">Home</a></li>
                             <li class="active">Checkout</li>
                         </ul><!-- end breadcrumb -->
-                    </div><!-- end col -->    
+                    </div><!-- end col -->
                 </div><!-- end row -->
             </div><!-- end container -->
         </div><!-- end breadcrumbs -->
-
+      
         <div id="snackbar">@if(session()->has('message')){{session()->get('message')}}@endif</div>
-       
+
         <!-- start section -->
         <section class="section white-backgorund">
             <div class="container">
@@ -26,9 +26,9 @@
                                 <h2 class="title">Checkout</h2>
                             </div><!-- end col -->
                         </div><!-- end row -->
-                        
+
                         <hr class="spacer-5"><hr class="spacer-20 no-border">
-                        
+
 
                             <div class="col-sm-12">
                                 <ul class="nav nav-pills style2 nav-justified">
@@ -58,14 +58,14 @@
                                     </li>
                                 </ul>
                                  <div class="row">
-                         
+
 
 
 
                                 <div class="tab-content pills">
                                     <div class="tab-pane active" id="shopping-cart">
                                        @if(Cart::count() > 0)
-                                <div class="table-responsive">    
+                                <div class="table-responsive">
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
@@ -92,7 +92,7 @@
                                                         <button type="submit" style="border:none;background:none;color:black;"><strong><b>Save for later</b></strong></button>
                                                     </form>
 
-                                                    
+
                                                 </td>
                                                 <td>
                                                     <span>{{$row->model->presentPrice($row->price)}}</span>
@@ -109,10 +109,10 @@
                                                             <input type="hidden" value="{{$row->rowId}}" name="id">
                                                         <button type="submit" class="close">×</button>
                                                     </form>
-                                                        
+
                                                 </td>
                                             </tr>
-                                          
+
                                            @endforeach()
                                         </tbody>
                                     </table><!-- end table -->
@@ -402,18 +402,18 @@
                                                         @if(Auth()->user())
                                                         <div class="form-group  @if($errors->has('email')){{'has-error'}} @endif">
                                                             <input id="email" type="text" placeholder="Email" name="email" value="{{Auth()->user()->email}}" class="form-control input-md required email" readonly>
-                                                       
+
                                                         </div><!-- end form-group -->
                                                         @else
                                                          <div class="form-group  @if($errors->has('email')){{'has-error'}} @endif">
                                                             <input id="email" type="text" placeholder="Email" name="email" value="{{old('email')}}" class="form-control input-md required email">
-                                                       
+
                                                         </div><!-- end form-group -->
                                                         @endif
 
                                                     </div><!-- end col -->
                                                     <div class="col-sm-6">
-                                                      
+
                                                         <div class="form-group  @if($errors->has('phone')){{'has-error'}} @endif">
                                                             <input id="phone" type="tel" placeholder="Phone" name="phone" value="{{old('phone')}}" class="form-control input-md required">
                                                         </div><!-- end form-group -->
@@ -710,10 +710,10 @@
                                                             <div class="form-group">
                                                                 <input id="name" type="text" placeholder="First Name" name="shippingname" class="form-control input-md required">
                                                             </div><!-- end form-group -->
-                                                         
+
                                                         </div><!-- end col -->
                                                         <div class="col-sm-6">
-                                                          
+
                                                             <div class="form-group">
                                                                 <input id="phone" type="tel" placeholder="Phone" name="shippingphone" class="form-control input-md required">
                                                             </div><!-- end form-group -->
@@ -737,15 +737,15 @@
                                                             </div><!-- end form-group -->
                                                         </div><!-- end col -->
                                                     </div><!-- end row -->
-                                                </div><!-- end collapse -->    
+                                                </div><!-- end collapse -->
                                                 <div class="form-group">
                                                     <textarea rows="6" class="form-control" placeholder="Notes about yout order"></textarea>
                                                 </div><!-- end form-group -->
                                             </div><!-- end col -->
-                                       
 
 
-                                            <!-- Add Extra code here  -->                                                                
+
+                                            <!-- Add Extra code here  -->
                                             </div><!-- end row -->
                                     </div><!-- end tab-pane -->
                                     <div class="tab-pane" id="payment">
@@ -803,7 +803,7 @@
                                                                                 <div class="col-sm-6">
                                                                                     <input type="text" name="yy" placeholder="YY" class="form-control required">
                                                                                 </div><!-- end col -->
-                                                                            </div><!-- end row -->      
+                                                                            </div><!-- end row -->
                                                                         </div><!-- end col -->
                                                                     </div><!-- end row -->
                                                                 </div><!-- end form-group -->
@@ -887,8 +887,8 @@
                                                                     <div id="card-errors" role="alert"></div>
                                                                   </div>
                                                                   <button  id="submit-button" style="margin-top:25px;" type="submit" class="btn btn-default btn-md round">Submit Payment <i class="fa fa-arrow-circle-right ml-5"></i></button>
-                                                                
-                                                                
+
+
                                                             </div><!-- end panel-body -->
                                                         </div><!-- end collapse -->
                                                     </div><!-- end panel -->
@@ -948,11 +948,11 @@
                                         </div><!-- end row -->
                                     </div><!-- end tab-pane -->
                                 </div><!-- end pills content -->
-                        
+
                                 <hr class="spacer-30">
 
                                 <div class="row">
-                                   
+
                                     <div class="col-sm-7 text-left">
                                          @if(!Session()->has('coupon'))
                                         <form class="form-inline" method="post" action="{{route("main.add_coupon")}}">
@@ -965,10 +965,10 @@
                                         @else
                                     @endif
                                     </div><!-- end col -->
-                                    
+
 
                                     <div class="col-sm-5">
-                                        <div class="table-responsive"> 
+                                        <div class="table-responsive">
                                             <table class="table no-border">
                                                 <tr>
                                                     <th>Cart Subtotal</th>
@@ -984,7 +984,7 @@
 
 
                                                         </form>
-                                                    
+
                                                     </th>
 
                                                     <td>{{priceFormat(Session()->get('coupon')['discount'])}}</td>
@@ -1007,7 +1007,7 @@
                                                             if( is_numeric( $b ) ) {
                                                                 $a = $b;
                                                             }
-                                                        
+
 
                                                     @endphp
                                                     <td>@if($a > 100) $100 @else Free Shipping @endif</td>
@@ -1027,11 +1027,11 @@
                             </div><!-- end col -->
                         </div><!-- end row -->
                     </div><!-- end col -->
-                </div><!-- end row -->                
+                </div><!-- end row -->
             </div><!-- end container -->
         </section>
         <!-- end section -->
-               
+
       @endsection()
 
       @section('scripts')
@@ -1061,7 +1061,7 @@
         };
 
         // Create an instance of the card Element.
-        var card = elements.create('card', 
+        var card = elements.create('card',
             {
                 style: style,
                 hidePostalCode:true

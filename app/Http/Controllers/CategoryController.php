@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
-use Illuminate\Http\Request;
-
-
-
-
+// use App\Category;
+// use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -18,8 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $data  = Category::paginate(5);
-        return view('backend.category',compact('data'));
+        Category::all();
     }
 
     /**
@@ -29,8 +24,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $data  = Category::all();
-        return view('backend.category_form',compact('data'));
+        //
     }
 
     /**
@@ -41,27 +35,25 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request,[
-            'title' =>'required',
-            'slug' => 'required',
-            'category' => 'required',
+        // $data  = Category::create([
+        //     'name' => 'huawei',
+        //     'slug' => 'huawei1',
+        //     'description' => 'huawei brand'
 
+        // ]);
 
-        ]);
+        // $data->category()->attach(6);
 
-        $data = Category::create([
-            'name' => $request->title,
-            'slug' => $request->slug,
-            'description' => ($request->desc) ? $request->desc: "NO description"
+            $data = Category::all();
 
-
-        ]);
-    
-        if($data)
-        {
-            $data->parent()->attach($request->category);
-            return back()->with('message','Category Added Successfully');
-        }
+            foreach($data as $cc)
+            {
+               
+                foreach($cc->children as $pp)
+                {
+                    echo $pp['name'];    
+                }
+            }
     }
 
     /**
@@ -83,9 +75,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        
-        $data  = Category::all();
-        return view('backend.category_form',array('data'=>$data,'category'=>$category));
+        //
     }
 
     /**
@@ -97,14 +87,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-         $category->name = $request->title;
-       $category->slug  = $request->slug;
-       $category->description = $request->desc;
-
-       $category->parent()->detach();
-       $category->parent()->attach($request->category);
-       $category->save();
-       return back()->with('message','Category Updated Successfully');
+        //
     }
 
     /**
@@ -115,40 +98,6 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        if($category->forceDelete())
-        {
-            $category->parent()->detach();
-            return back()->with('message','Category Deleted Successfully');
-        }
+        //
     }
-
-
-    public function putIntoTrash(Category $category)
-    {
-        if($category->delete())
-        {
-            return back()->with('message','Category Trashed Successfully');
-        }
-    }
-
-
-    public function trash()
-    {
-        $data = Category::onlyTrashed()->paginate(5);
-        
-        return view('backend.trashed_category',compact('data'));
-    }
-    
-    public function recoverFromTrash($id)
-
-    {
-
-        $category = Category::onlyTrashed()->find($id);
-        
-        if($category->restore())
-        {
-            return back()->with('message','Categroy Restore Successfully');
-        }
-    }
-
 }
