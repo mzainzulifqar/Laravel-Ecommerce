@@ -15,6 +15,8 @@ Best Price is a web application Develope with one of the finest Framework Larave
 8) Transational Emails (Kindly add your mail server in environment file).
 ## Much more to explore
 
+## To view Demo please open demo folder at root
+
 
 ## Release Information
 
@@ -28,3 +30,9 @@ this release please perform following Steps;
 4) Hit Url "http://localhost/ecommerce/"
 5) For admin "http//localhost/ecommerce/admin/login".
 6) Boom You are done!! Enjoy
+
+## PHP version 7.0 or newer is recommended.
+
+It should work on 7.0 as well, but we strongly advise you NOT to run
+such old versions of PHP, because of potential security and performance
+issues, as well as missing features.
